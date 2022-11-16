@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import img1 from '../../../assets/images/chair.png';
 import { DayPicker } from 'react-day-picker';
-import { format } from 'date-fns';
 
-const AppointmentBanner = () => {
-    const [selectedDate, setSelectedDate] = useState(new Date());
+
+const AppointmentBanner = ({ selectedDate, setSelectedDate }) => {
+    // const [selectedDate, setSelectedDate] = useState(new Date());
     return (
         <div>
             <div className="hero banner-bg md:h-screen lg:min-h-screen">
@@ -19,7 +19,7 @@ const AppointmentBanner = () => {
                     </div>
                 </div>
             </div>
-            <p className='text-semibold text-primary text-center lg:-mt-9'>Available Appointments on {format(selectedDate, 'PP')}</p>
+
         </div>
     );
 };
