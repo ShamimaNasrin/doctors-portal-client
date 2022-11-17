@@ -1,5 +1,4 @@
 import React from 'react';
-import PrimaryBtn from '../../../components/PrimaryBtn/PrimaryBtn';
 
 const OptionCard = ({ option, setTreatment }) => {
     //console.log(option);

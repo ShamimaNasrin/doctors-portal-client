@@ -1,7 +1,9 @@
+import { format } from 'date-fns';
 import React from 'react';
 
-const BookingModal = ({ treatment }) => {
+const BookingModal = ({ treatment, selectedDate }) => {
     const { _id, name, slots } = treatment;
+    const date = format(selectedDate, 'PP');
     return (
         <div>
             {/* Put this part before </body> tag */}
@@ -12,21 +14,25 @@ const BookingModal = ({ treatment }) => {
                     <h3 className="text-lg font-bold mb-9">{name}</h3>
 
                     <form >
-                        <div className="form-control mt-4 bg-info rounded-lg">
-                            <p className='text-justify px-4 py-3 rounded-lg'>date</p>
+                        <div className="form-control mt-4">
+                            <input type="text" disabled value={date} className="input w-full input-bordered" />
                         </div>
-                        <div className="form-control mt-4 bg-info rounded-lg">
-                            <p className='text-justify px-4 py-3 rounded-lg'>Time</p>
+                        <div className="form-control mt-4">
+                            <select className="select select-bordered w-full">
+                                {
+                                    slots.map(slot => <option value={slot}>{slot}</option>)
+                                }
+                            </select>
                         </div>
 
                         <div className="form-control mt-4">
-                            <input type="text" value='name' placeholder="Full Name" className="input input-bordered" />
+                            <input type="text" name='name' placeholder="Full Name" className="input input-bordered" />
                         </div>
                         <div className="form-control mt-4">
-                            <input type="number" value='password' placeholder="Phone Number" className="input input-bordered" />
+                            <input type="number" name='phone' placeholder="Phone Number" className="input input-bordered" />
                         </div>
                         <div className="form-control mt-4">
-                            <input type="email" value='email' placeholder="email" className="input input-bordered" />
+                            <input type="email" name='email' placeholder="email" className="input input-bordered" />
                         </div>
 
                         <div className="form-control mt-4">
