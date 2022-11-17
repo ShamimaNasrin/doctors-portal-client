@@ -25,7 +25,7 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
 
         console.log(booking);
         setTreatment(null);
-
+        
     }
 
     // [3, 4, 5].map((value, i) => console.log(value))
