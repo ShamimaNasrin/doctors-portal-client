@@ -13,6 +13,7 @@ const OptionCard = ({ option, setTreatment }) => {
                     <div className="card-actions justify-end">
                         {/* The button to open modal */}
                         <label
+                            disabled={slots.length === 0}
                             htmlFor="booking-modal"
                             className="btn btn-primary bg-gradient-to-r from-primary to-secondary text-white border-none"
                             onClick={() => setTreatment(option)}
