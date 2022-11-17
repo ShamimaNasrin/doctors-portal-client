@@ -9,12 +9,25 @@ const BookingModal = ({ treatment, selectedDate }) => {
         e.preventDefault();
         const form = e.target;
         const slot = form.slot.value;
-        const name = form.name.value;
+        const patientName = form.name.value;
         const phone = form.phone.value;
         const email = form.email.value;
-        console.log(slot, name, phone, email);
+        console.log(slot, patientName, phone, email);
+
+        const booking = {
+            appointmentDate: date,
+            treatment: name,
+            patient: patientName,
+            slot,
+            email,
+            phone,
+        }
+
+        console.log(booking);
 
     }
+
+    // [3, 4, 5].map((value, i) => console.log(value))
     return (
         <div>
             {/* Put this part before </body> tag */}
@@ -31,7 +44,10 @@ const BookingModal = ({ treatment, selectedDate }) => {
                         <div className="form-control mt-4">
                             <select name='slot' className="select w-full bg-info">
                                 {
-                                    slots.map(slot => <option value={slot}>{slot}</option>)
+                                    slots.map((slot, i) => <option
+                                        value={slot}
+                                        key={i}
+                                    >{slot}</option>)
                                 }
                             </select>
                         </div>
