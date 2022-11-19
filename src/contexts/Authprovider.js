@@ -7,19 +7,21 @@ const auth = getAuth(app);
 
 const Authprovider = ({ children }) => {
     const [user, setUser] = useState(null);
-
+    const [loading, setLoading] = useState(true);
 
     //create user
     const signUp = (email, password) => {
+        setLoading(true);
         return createUserWithEmailAndPassword(auth, email, password);
     }
     //Login
     const signIn = (email, password) => {
+        setLoading(true);
         return signInWithEmailAndPassword(auth, email, password);
     }
 
     //input userName 
-    const UpdateUser = (userInfo) =>{
+    const UpdateUser = (userInfo) => {
         return updateProfile(user, userInfo)
 
     }
@@ -29,6 +31,7 @@ const Authprovider = ({ children }) => {
         const unsubscribe = onAuthStateChanged(auth, currentUser => {
             console.log('user observing');
             setUser(currentUser);
+            setLoading(false);
         });
 
         return () => unsubscribe();
@@ -36,6 +39,7 @@ const Authprovider = ({ children }) => {
 
     //Log Out
     const logOut = () => {
+        setLoading(true);
         return signOut(auth);
     }
 
@@ -44,7 +48,8 @@ const Authprovider = ({ children }) => {
         user,
         signIn,
         logOut,
-        UpdateUser
+        UpdateUser,
+        loading
     }
     return (
         <AuthContext.Provider value={authInfo}>
