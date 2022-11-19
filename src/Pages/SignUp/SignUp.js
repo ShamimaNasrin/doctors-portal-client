@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/Authprovider';
 
 const SignUp = () => {
-    const { signUp } = useContext(AuthContext);
+    const { signUp, UpdateUser } = useContext(AuthContext);
     const [signUpError, setSignUpError] = useState('');
     const location = useLocation();
     const navigate = useNavigate();
@@ -24,6 +24,13 @@ const SignUp = () => {
                 const user = result.user;
                 navigate(from, { replace: true });
                 alert('signup successfull');
+
+                const userInfo = {
+                    displayName: data.name
+                }
+                UpdateUser(userInfo)
+                    .then(() => { })
+                    .catch(err => console.log(err));
 
             })
             .catch(e => {
