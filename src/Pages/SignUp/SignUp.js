@@ -1,15 +1,28 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../contexts/Authprovider';
 
 const SignUp = () => {
+    const { signUp } = useContext(AuthContext);
 
+    //react-hook-form
     const { register, handleSubmit, formState: { errors } } = useForm();
-
     const handleSignUp = (data) => {
         console.log(data);
-        console.log(errors);
+        //console.log(errors);
+
+        //create user
+        signUp(data.email, data.password)
+            .then(result => {
+                const user = result.user;
+                alert('signup successfull');
+
+            })
+            .catch(e => console.error(e))
     }
+
+
 
     return (
         <div className='h-[800px] flex justify-center items-center'>
@@ -41,7 +54,7 @@ const SignUp = () => {
                             {...register("password", {
                                 required: "Password is required",
                                 minLength: { value: 6, message: 'Password must be 6 characters or longer' },
-                                pattern: { value: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])/, message: 'Your password is not strong enough' }
+                                pattern: { value: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])/, message: 'password must have an Uppercase, number and special character' }
                             })}
                             className="input input-bordered w-full max-w-xs" />
                         {errors.password && <p className='text-red-600 text-xs pt-1'>{errors.password?.message}</p>}
