@@ -1,7 +1,10 @@
 import { format } from 'date-fns';
-import React from 'react';
+import React, { useContext } from 'react';
+import toast from 'react-hot-toast';
+import { AuthContext } from '../../../contexts/Authprovider';
 
 const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
+    const { user } = useContext(AuthContext);
     const { _id, name, slots } = treatment;
     const date = format(selectedDate, 'PP');
 
@@ -12,7 +15,7 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
         const patientName = form.name.value;
         const phone = form.phone.value;
         const email = form.email.value;
-        console.log(slot, patientName, phone, email);
+        //console.log(slot, patientName, phone, email);
 
         const booking = {
             appointmentDate: date,
@@ -23,9 +26,23 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
             phone,
         }
 
-        console.log(booking);
-        setTreatment(null);
-        
+        //send booking data to server
+        fetch('http://localhost:5000/bookings', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(booking)
+        })
+            .then(res => res.json())
+            .then(data => {
+                //console.log(data);
+                if (data.acknowledged) {
+                    setTreatment(null);
+                    toast.success('Booking confirmed')
+                }
+            })
+
     }
 
     // [3, 4, 5].map((value, i) => console.log(value))
@@ -54,13 +71,13 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
                         </div>
 
                         <div className="form-control mt-4">
-                            <input type="text" name='name' placeholder="Full Name" className="input input-bordered" />
+                            <input type="text" name='name' defaultValue={user?.displayName} disabled placeholder="Full Name" className="input input-bordered" />
+                        </div>
+                        <div className="form-control mt-4">
+                            <input type="email" name='email' defaultValue={user?.email} readOnly placeholder="email" className="input input-bordered" />
                         </div>
                         <div className="form-control mt-4">
                             <input type="number" name='phone' placeholder="Phone Number" className="input input-bordered" />
-                        </div>
-                        <div className="form-control mt-4">
-                            <input type="email" name='email' placeholder="email" className="input input-bordered" />
                         </div>
 
                         <div className="form-control mt-4">
