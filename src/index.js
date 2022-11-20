@@ -6,12 +6,26 @@ import reportWebVitals from './reportWebVitals';
 import 'react-day-picker/dist/style.css';
 import Authprovider from './contexts/Authprovider';
 
+//React query
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+
+// Create a client(React query)
+const queryClient = new QueryClient()
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Authprovider>
-      <App />
-    </Authprovider>
+
+    {/* Provide the client to your App (React query) */}
+    <QueryClientProvider client={queryClient}>
+      <Authprovider>
+        <App />
+      </Authprovider>
+    </QueryClientProvider>
+
   </React.StrictMode>
 );
 
