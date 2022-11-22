@@ -6,7 +6,6 @@ import { AuthContext } from '../../contexts/Authprovider';
 const Login = () => {
     const { signIn } = useContext(AuthContext);
     const { register, formState: { errors }, handleSubmit } = useForm();
-    const [data, setData] = useState("");
     const [loginError, setLoginError] = useState('');
     const location = useLocation();
     const navigate = useNavigate();
@@ -60,7 +59,7 @@ const Login = () => {
 
                     </div>
 
-                    <p>{data}</p>
+                    
                     <input className='btn btn-accent w-full text-white' value="Login" type="submit" />
                     <div>
                         {loginError && <p className='text-red-600'>{loginError}</p>}

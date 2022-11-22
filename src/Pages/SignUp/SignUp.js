@@ -3,68 +3,61 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/Authprovider';
-import useToken from '../../hooks/useToken';
+//import useToken from '../../hooks/useToken';
 
 const SignUp = () => {
-    const { signUp, UpdateUser } = useContext(AuthContext);
-    const [signUpError, setSignUpError] = useState('');
-    const [createdUserEmail, setCreatedUserEmail] = useState('')
-    const [token] = useToken(createdUserEmail);
-
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { createUser, updateUser } = useContext(AuthContext);
+    const [signUpError, setSignUPError] = useState('');
+    // const [createdUserEmail, setCreatedUserEmail] = useState('')
+    // const [token] = useToken(createdUserEmail);
     const location = useLocation();
     const navigate = useNavigate();
     const from = location.state?.from?.pathname || '/';
 
-    if (token) {
-        navigate(from, { replace: true });
-    }
-
-    //react-hook-form
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    // if(token){
+    //     navigate(from, { replace: true });
+    // }
 
     const handleSignUp = (data) => {
-        console.log(data);
-        //console.log(errors);
-        setSignUpError('');
-
-        //create user
-        signUp(data.email, data.password)
+        setSignUPError('');
+        createUser(data.email, data.password)
             .then(result => {
                 const user = result.user;
-                saveUserToDB(data.name, data.email);
-                toast.success('signup successfull');
-
+                console.log(user);
+                toast('User Created Successfully.')
+                
                 const userInfo = {
                     displayName: data.name
                 }
-                UpdateUser(userInfo)
-                    .then(() => { })
+                updateUser(userInfo)
+                    .then(() => {
+                        saveUsertoDB(data.name, data.email);
+                        navigate(from, { replace: true });
+                    })
                     .catch(err => console.log(err));
-
             })
-            .catch(e => {
-                console.error(e.message);
-                setSignUpError(e.message);
-            })
-
-        const saveUserToDB = (name, email) => {
-            const user = { name, email };
-            fetch('http://localhost:5000/users', {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify(user)
-            })
-                .then(res => res.json())
-                .then(data => {
-                    //console.log('saved user info', data);
-                    setCreatedUserEmail(email);
-                })
-        }
-
-
+            .catch(error => {
+                console.log(error)
+                //setSignUPError(error.message)
+            });
     }
+
+    const saveUsertoDB = (name, email) =>{
+        const user ={name, email};
+        fetch('http://localhost:5000/users', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+        .then(res => res.json())
+        .then(data =>{
+           // setCreatedUserEmail(email);
+        })
+    }
+
 
 
     return (

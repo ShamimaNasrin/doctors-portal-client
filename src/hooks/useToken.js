@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-const useToken = (email) => {
+const useToken = email => {
     const [token, setToken] = useState('');
     useEffect(() => {
         if (email) {
@@ -8,14 +8,14 @@ const useToken = (email) => {
                 .then(res => res.json())
                 .then(data => {
                     if (data.accessToken) {
-                        console.log('token', data.accessToken);
-                        localStorage.setItem('doctor-Token', data.accessToken);
+                        console.log('token receive:', data.accessToken);
+                        localStorage.setItem('accessToken', data.accessToken);
                         setToken(data.accessToken);
                     }
                 });
         }
     }, [email]);
     return [token];
-};
+}
 
 export default useToken;
