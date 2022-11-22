@@ -3,13 +3,21 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/Authprovider';
+import useToken from '../../hooks/useToken';
 
 const SignUp = () => {
     const { signUp, UpdateUser } = useContext(AuthContext);
     const [signUpError, setSignUpError] = useState('');
+    const [createdUserEmail, setCreatedUserEmail] = useState('')
+    const [token] = useToken(createdUserEmail);
+
     const location = useLocation();
     const navigate = useNavigate();
     const from = location.state?.from?.pathname || '/';
+
+    if (token) {
+        navigate(from, { replace: true });
+    }
 
     //react-hook-form
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -51,21 +59,7 @@ const SignUp = () => {
                 .then(res => res.json())
                 .then(data => {
                     //console.log('saved user info', data);
-                    getUserToken(email);
-
-                })
-        }
-
-        //receive token
-        const getUserToken = email => {
-            fetch(`http://localhost:5000/jwt?email=${email}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.accessToken) {
-                        console.log('token', data.accessToken);
-                        localStorage.setItem('doctor-Token', data.accessToken);
-                        navigate(from, { replace: true });
-                    }
+                    setCreatedUserEmail(email);
                 })
         }
 
