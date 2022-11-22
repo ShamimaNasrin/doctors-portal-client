@@ -50,12 +50,27 @@ const SignUp = () => {
             })
                 .then(res => res.json())
                 .then(data => {
-                    console.log('saved user info',data);
-                    navigate(from, { replace: true });
+                    //console.log('saved user info', data);
+                    getUserToken(email);
+
                 })
         }
-    }
 
+        //receive token
+        const getUserToken = email => {
+            fetch(`http://localhost:5000/jwt?email=${email}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.accessToken) {
+                        console.log('token', data.accessToken);
+                        localStorage.setItem('doctor-Token', data.accessToken);
+                        navigate(from, { replace: true });
+                    }
+                })
+        }
+
+
+    }
 
 
     return (
