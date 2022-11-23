@@ -14,19 +14,23 @@ const AllUsers = () => {
         }
     });
 
-    //make a user admin button click handler
+    //make a user admin handler
     const handleMakeAdmin = id => {
         fetch(`http://localhost:5000/users/admin/${id}`, {
-            method: 'PUT'
+            method: 'PUT',
+            headers: {
+                authorization: `bearer ${localStorage.getItem('accessToken')}`
+            }
         })
             .then(res => res.json())
             .then(data => {
                 if (data.modifiedCount > 0) {
-                    toast.success('sucessfully add as admin')
+                    toast.success('Make admin successful.')
                     refetch();
                 }
             })
     }
+
     return (
         <div>
             <h2 className="text-3xl">All Users</h2>
