@@ -1,3 +1,4 @@
+import { loadStripe } from '@stripe/stripe-js';
 import React from 'react';
 import { useLoaderData } from 'react-router-dom';
 
@@ -5,6 +6,11 @@ const Payment = () => {
     const booking = useLoaderData();
     //console.log(booking);
     const { treatment, price, appointmentDate, slot } = booking;
+
+    //stripe Publishable key
+    const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PK);
+    console.log(stripePromise);
+
     return (
         <div>
             <h3 className="text-3xl">Payment for {treatment}</h3>
