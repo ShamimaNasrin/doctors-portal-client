@@ -1,13 +1,29 @@
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import Loading from '../../../Shared/Loading/Loading';
 
 const AddDoctor = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
+
+    //load doctor specialties from server
+    const { data: specialties, isLoading } = useQuery({
+        queryKey: ['specialty'],
+        queryFn: async () => {
+            const res = await fetch('http://localhost:5000/appointmentSpecialty');
+            const data = await res.json();
+            return data;
+        }
+    })
+
     const handleAddDoctor = data => {
         console.log(data);
     }
 
+    if (isLoading) {
+        return <Loading></Loading>
+    }
     return (
         <div className='w-96 p-7'>
             <h2 className="text-4xl">Add A Doctor</h2>
@@ -31,8 +47,12 @@ const AddDoctor = () => {
                     <select
                         {...register('specialty')}
                         className="select input-bordered w-full max-w-xs">
-
-
+                        {
+                            specialties.map(specialty => <option
+                                key={specialty._id}
+                                value={specialty.name}
+                            >{specialty.name}</option>)
+                        }
 
                     </select>
                 </div>
