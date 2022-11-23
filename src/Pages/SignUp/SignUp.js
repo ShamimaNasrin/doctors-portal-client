@@ -3,21 +3,21 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/Authprovider';
-//import useToken from '../../hooks/useToken';
+import useToken from '../../hooks/useToken';
 
 const SignUp = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const { createUser, updateUser } = useContext(AuthContext);
     const [signUpError, setSignUPError] = useState('');
-    // const [createdUserEmail, setCreatedUserEmail] = useState('')
-    // const [token] = useToken(createdUserEmail);
+    const [createdUserEmail, setCreatedUserEmail] = useState('')
+    const [token] = useToken(createdUserEmail);
     const location = useLocation();
     const navigate = useNavigate();
     const from = location.state?.from?.pathname || '/';
 
-    // if(token){
-    //     navigate(from, { replace: true });
-    // }
+    if (token) {
+        navigate(from, { replace: true });
+    }
 
     const handleSignUp = (data) => {
         setSignUPError('');
@@ -26,25 +26,26 @@ const SignUp = () => {
                 const user = result.user;
                 console.log(user);
                 toast('User Created Successfully.')
-                
+
                 const userInfo = {
                     displayName: data.name
                 }
                 updateUser(userInfo)
                     .then(() => {
                         saveUsertoDB(data.name, data.email);
-                        navigate(from, { replace: true });
+                        //navigate(from, { replace: true });
                     })
                     .catch(err => console.log(err));
             })
             .catch(error => {
                 console.log(error)
-                //setSignUPError(error.message)
+                setSignUPError(error.message)
             });
     }
 
-    const saveUsertoDB = (name, email) =>{
-        const user ={name, email};
+
+    const saveUsertoDB = (name, email) => {
+        const user = { name, email };
         fetch('http://localhost:5000/users', {
             method: 'POST',
             headers: {
@@ -52,11 +53,27 @@ const SignUp = () => {
             },
             body: JSON.stringify(user)
         })
-        .then(res => res.json())
-        .then(data =>{
-           // setCreatedUserEmail(email);
-        })
+            .then(res => res.json())
+            .then(data => {
+                setCreatedUserEmail(email);
+                console.log(data);
+                //getUserToken(email);
+            })
     }
+
+
+    // //jwt token
+    // const getUserToken = email => {
+    //     fetch(`http://localhost:5000/jwt?email=${email}`)
+    //         .then(res => res.json())
+    //         .then(data => {
+    //             if (data.accessToken) {
+    //                 console.log('token receive:', data.accessToken);
+    //                 localStorage.setItem('accessToken', data.accessToken);
+    //                 navigate('/');
+    //             }
+    //         })
+    // }
 
 
 
