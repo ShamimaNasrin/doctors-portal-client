@@ -1,11 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import Loading from '../../../Shared/Loading/Loading';
 
 const AddDoctor = () => {
-
     const { register, handleSubmit, formState: { errors } } = useForm();
+
+    const imageHostKey = process.env.REACT_APP_imgbb_key;
+    //console.log(imageHostKey);
+
+    const navigate = useNavigate();
 
     //load doctor specialties from server
     const { data: specialties, isLoading } = useQuery({
@@ -19,7 +24,25 @@ const AddDoctor = () => {
 
     const handleAddDoctor = data => {
         console.log(data);
+        const image = data.image[0];
+        const formData = new FormData();
+        formData.append('image', image);
+        const url = `https://api.imgbb.com/1/upload?expiration=600&key=${imageHostKey}`
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json())
+            .then(imgData => {
+                //console.log(imgData);
+                if (imgData.success) {
+                    console.log(imgData.data.url);
+                }
+
+            })
     }
+
+
 
     if (isLoading) {
         return <Loading></Loading>
